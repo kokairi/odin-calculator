@@ -10,12 +10,32 @@ function subtractNumbers(firstValue, secondValue) {
 
 function multiplyNumbers(firstValue, secondValue) {
     const displayText = document.querySelector('.displayText');
-    displayText.textContent = Number(firstValue) * Number(secondValue);
+    let result = Number(firstValue) * Number(secondValue); 
+    if (result.toString().length > 9) {
+        displayText.textContent = (result.toExponential(2));
+    }
+    else {
+        displayText.textContent = Number(firstValue) * Number(secondValue);
+    }
 }
 
 function divideNumbers(firstValue, secondValue) {
     const displayText = document.querySelector('.displayText');
-    displayText.textContent = Number(firstValue) / Number(secondValue);
+
+    if (secondValue === "0") {
+        alert("ERROR: You can't divide a number by zero!");
+        displayText.textContent = 'error';
+    }
+    else {
+        let result = Number(firstValue) / Number(secondValue);
+        if (result.toString().length > 9) {
+            displayText.textContent = (result.toExponential(2));
+        }
+        else {
+        displayText.textContent = Number(firstValue) / Number(secondValue);
+        }
+    }
+
 }
 
 // takes an operator and 2 numbers and calls one of the basic math operators on the numbers
@@ -45,19 +65,18 @@ let operatorCount = 0;
 const numberButtons = document.querySelectorAll('.calcButton.number');
 numberButtons.forEach(button => {
     button.addEventListener('click', (event) => {
-        if (currentValue.length < 9) {
+        // disable decimal button if display already contains a decimal
+        if ((event.target.dataset.val === '.') && (currentValue.includes('.'))) {
+            return;
+        }
+        else if (currentValue.length < 9) {
             currentValue += event.target.dataset.val;
             const displayText = document.querySelector('.displayText');
             displayText.textContent = currentValue;
-
-            console.log(`SV = ${savedValue}`);
-            console.log(`CV = ${currentValue}`);
-            console.log(`SOP = ${savedOperator}`);
-            console.log(`COP = ${currentOperator}`);
-            console.log("end");
         }
+        // disable number buttons when max input reaches str.length of 9
         else if (currentValue.length > 9) {
-            currentValue += "";
+            return;
         }
 
 
@@ -77,16 +96,8 @@ operatorButtons.forEach(button => {
     
             const runningText = document.querySelector('.runningText');
             runningText.textContent = `${savedValue}${currentOperator}`;
-            
-            console.log(`SV = ${savedValue}`);
-            console.log(`CV = ${currentValue}`);
-            console.log(`SOP = ${savedOperator}`);
-            console.log(`COP = ${currentOperator}`);
-            console.log("end");
         }
         else if (operatorCount === 2) {
-            console.log('DO THE MATH');
-
             operate(savedValue, currentValue, currentOperator);
 
             currentOperator = event.target.innerHTML;  
@@ -99,15 +110,7 @@ operatorButtons.forEach(button => {
             runningText.textContent = `${savedValue}${currentOperator}`;
 
             operatorCount -= 1; 
-
-            console.log(`SV = ${savedValue}`);
-            console.log(`CV = ${currentValue}`);
-            console.log(`SOP = ${savedOperator}`);
-            console.log(`COP = ${currentOperator}`);
-            console.log("end");
-
         }
-
     });
 })
 
@@ -118,22 +121,10 @@ equalButton.addEventListener('click', (event) => {
     if (savedValue === "") {
         const runningText = document.querySelector('.runningText');
         runningText.textContent = `${currentValue}${event.target.innerHTML}`;
-
-        console.log(`SV = ${savedValue}`);
-        console.log(`CV = ${currentValue}`);
-        console.log(`SOP = ${savedOperator}`);
-        console.log(`COP = ${currentOperator}`);
-        console.log("end");
     }
     else if (currentValue === "") {
         const runningText = document.querySelector('.runningText');
         runningText.textContent = `${savedValue}${event.target.innerHTML}`;
-
-        console.log(`SV = ${savedValue}`);
-        console.log(`CV = ${currentValue}`);
-        console.log(`SOP = ${savedOperator}`);
-        console.log(`COP = ${currentOperator}`);
-        console.log("end");
     }
     // else performs the math operation and outputs result on the display
     else {
@@ -148,12 +139,6 @@ equalButton.addEventListener('click', (event) => {
         savedValue = ""; // reset currentValue to empty string
         const displayText = document.querySelector('.displayText');  // get sum from ouputted display
         currentValue = displayText.textContent; // saves sum as currentValue
-    
-        console.log(`SV = ${savedValue}`);
-        console.log(`CV = ${currentValue}`);
-        console.log(`SOP = ${savedOperator}`);
-        console.log(`COP = ${currentOperator}`);
-        console.log("end");
     }
 
 });
@@ -216,4 +201,5 @@ clearButton.addEventListener('click', () => {
 
 
 
-// DEAL WITH LONG VALUES - ADD A LIMIT TO HOW MANY NUMBERS YOU CAN INPUT
+
+// add keyboard support : number, operator, and equal buttons
