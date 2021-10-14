@@ -33,35 +33,55 @@ main {
 }
 
 .calcDisplay {
-    flex: 100%;
-    height: 125px;
-    /* border: 1px solid white; */
+    /* flex: 100%; */
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    min-height: 125px;
+    flex: 1;
+    border: 1px solid white;
     border-radius: 10px;
     position: relative;
     margin: 35px 0px 12px;
 }
 
 .runningText {
-    position: absolute;
+    /* inline-size: 275px; */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    /* position: absolute;
     top: 0;
-    right: 0;
+    right: 0; */
+    /* width: 300px; */
+    /* display: flex; */
+    text-align: right;
     font-size: 35px;
     padding: 10px 15px;
     font-weight: 100; 
     color: rgb(202, 202, 202);
+    border: 2px solid red;
+
 }
 
 .displayText {
-    position: absolute;
+    /* position: absolute;
     bottom: 0;
-    right: 0;
+    right: 0; */
     font-size: 45px;
     padding: 0px 15px;
+    text-align: right;
+    border: 2px solid red;
 }
 
 .buttonContainer {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+    grid-template-areas:
+        "AC C percent div"
+        "7 8 9 mult"
+        "4 5 6 sub"
+        "1 2 3 add"
+        "zero zero decimal equal";
     grid-gap: 1em;
     /* justify-content: space-between; */
     width: 350px;
@@ -69,6 +89,9 @@ main {
     /* gap: 10px; */
     /* border: 1px solid white; */
 }
+
+
+
 
 .calcButton {
     /* border: 1px solid blue; */
@@ -82,17 +105,53 @@ main {
     font-weight: 500;
 }
 
-.calcButton.number:hover {
-    background-color: #797979;
+.calcButton.number {
+    background-color: #313131;
+    transition: background-color .2s ease-in-out;
 }
 
-.calcButton.operator {
+.calcButton.number:hover {
+    background-color: #797979;
+    /* transition: background-color .1s ease-in; */
+}
+
+.calcButton.number:active {
+    background-color: #313131;
+    transform: scale(0.85);
+}
+
+.calcButton.operator,
+.calcButton.equal {
     background-color: #f69906;
+    transition: all .2s ease-in-out;
+}
+
+.calcButton.operator:hover,
+.calcButton.equal:hover {
+    color: #f69906;
+    background-color: white;
+}
+
+.calcButton.operator:active,
+.calcButton.equal:active {
+    color: white;
+    background-color: #f69906;
+    transform: scale(0.85);
 }
 
 .calcButton.other {
     color: black;
     background-color: #9f9f9f;
+    transition: all .2s ease-in-out;
+}
+
+.calcButton.other:hover {
+    background-color: #dddddd;
+}
+
+.calcButton.other:active {
+    background-color: white;
+    transform: scale(0.85);
 }
 
 footer {
@@ -101,8 +160,13 @@ footer {
     color: black;
 }
 
+
 .calcButton.number[data-val='0'] {
-    border: 1px solid white;
+    text-align: left;
+    padding-left: 20px;
+    width:auto; 
+    border-radius: 50px;
+    grid-area: zero;
 } 
 
 .line {

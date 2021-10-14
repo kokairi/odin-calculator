@@ -45,15 +45,22 @@ let operatorCount = 0;
 const numberButtons = document.querySelectorAll('.calcButton.number');
 numberButtons.forEach(button => {
     button.addEventListener('click', (event) => {
-        currentValue += event.target.dataset.val;
-        const displayText = document.querySelector('.displayText');
-        displayText.textContent = currentValue;
+        if (currentValue.length < 9) {
+            currentValue += event.target.dataset.val;
+            const displayText = document.querySelector('.displayText');
+            displayText.textContent = currentValue;
 
-        console.log(`SV = ${savedValue}`);
-        console.log(`CV = ${currentValue}`);
-        console.log(`SOP = ${savedOperator}`);
-        console.log(`COP = ${currentOperator}`);
-        console.log("end");
+            console.log(`SV = ${savedValue}`);
+            console.log(`CV = ${currentValue}`);
+            console.log(`SOP = ${savedOperator}`);
+            console.log(`COP = ${currentOperator}`);
+            console.log("end");
+        }
+        else if (currentValue.length > 9) {
+            currentValue += "";
+        }
+
+
     });
 });
 
@@ -107,10 +114,26 @@ operatorButtons.forEach(button => {
 
 const equalButton = document.querySelector('.calcButton.equal');
 equalButton.addEventListener('click', (event) => {
-    // if user only selects 1 number then presses equal just display "savedValue="
+    // if user only selects 1 number then presses equal just display "value="
     if (savedValue === "") {
         const runningText = document.querySelector('.runningText');
         runningText.textContent = `${currentValue}${event.target.innerHTML}`;
+
+        console.log(`SV = ${savedValue}`);
+        console.log(`CV = ${currentValue}`);
+        console.log(`SOP = ${savedOperator}`);
+        console.log(`COP = ${currentOperator}`);
+        console.log("end");
+    }
+    else if (currentValue === "") {
+        const runningText = document.querySelector('.runningText');
+        runningText.textContent = `${savedValue}${event.target.innerHTML}`;
+
+        console.log(`SV = ${savedValue}`);
+        console.log(`CV = ${currentValue}`);
+        console.log(`SOP = ${savedOperator}`);
+        console.log(`COP = ${currentOperator}`);
+        console.log("end");
     }
     // else performs the math operation and outputs result on the display
     else {
@@ -187,3 +210,10 @@ clearButton.addEventListener('click', () => {
         document.querySelector('.displayText').textContent = 0;
     }
 })
+
+
+
+
+
+
+// DEAL WITH LONG VALUES - ADD A LIMIT TO HOW MANY NUMBERS YOU CAN INPUT
