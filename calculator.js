@@ -1,41 +1,38 @@
 function addNumbers(firstValue, secondValue) {
-    const displayText = document.querySelector('.displayText');
-    displayText.textContent = Number(firstValue) + Number(secondValue);
+    let result = Number(firstValue) + Number(secondValue);
+    displayResult(result);
 }
 
 function subtractNumbers(firstValue, secondValue) {
-    const displayText = document.querySelector('.displayText');
-    displayText.textContent = Number(firstValue) - Number(secondValue);
+    let result = Number(firstValue) - Number(secondValue);
+    displayResult(result);
 }
 
 function multiplyNumbers(firstValue, secondValue) {
-    const displayText = document.querySelector('.displayText');
     let result = Number(firstValue) * Number(secondValue); 
-    if (result.toString().length > 9) {
-        displayText.textContent = (result.toExponential(2));
-    }
-    else {
-        displayText.textContent = Number(firstValue) * Number(secondValue);
-    }
+    displayResult(result);
 }
 
 function divideNumbers(firstValue, secondValue) {
-    const displayText = document.querySelector('.displayText');
-
     if (secondValue === "0") {
         alert("ERROR: You can't divide a number by zero!");
-        displayText.textContent = 'error';
+        document.querySelector('.displayText').textContent = 'error';
     }
     else {
         let result = Number(firstValue) / Number(secondValue);
-        if (result.toString().length > 9) {
-            displayText.textContent = (result.toExponential(2));
-        }
-        else {
-        displayText.textContent = Number(firstValue) / Number(secondValue);
-        }
+        displayResult(result);
     }
+}
 
+function displayResult(result) {
+    const displayText = document.querySelector('.displayText');
+    // display result with more 9+ digits using scientific notation (rounded to the ten thousandeth place)
+    if (result.toString().length > 9) {
+        displayText.textContent = (result.toExponential(4));
+    }
+    else {
+        displayText.textContent = result;
+    }
 }
 
 // takes an operator and 2 numbers and calls one of the basic math operators on the numbers
@@ -46,6 +43,7 @@ function operate(firstValue, secondValue, operator) {
     else if (operator === "÷") {divideNumbers(firstValue, secondValue);}
     }
 
+// called when % button is clicked 
 function divideBy100(number) {
     const displayText = document.querySelector('.displayText');
     displayText.textContent = Number(number/100);
@@ -78,8 +76,6 @@ numberButtons.forEach(button => {
         else if (currentValue.length > 9) {
             return;
         }
-
-
     });
 });
 
