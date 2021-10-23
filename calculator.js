@@ -1,3 +1,10 @@
+// Onload initial values 
+let savedValue = "";
+let currentValue = "";
+let savedOperator = "";
+let currentOperator = "";
+let operatorCount = 0; 
+
 function addNumbers(firstValue, secondValue) {
     let result = Number(firstValue) + Number(secondValue);
     displayResult(result);
@@ -14,118 +21,156 @@ function multiplyNumbers(firstValue, secondValue) {
 }
 
 function divideNumbers(firstValue, secondValue) {
-    if (secondValue === "0") {
-        alert("ERROR: You can't divide a number by zero!");
-        document.querySelector('.displayText').textContent = 'error';
-    }
-    else {
+    if (secondValue != '0') {
         let result = Number(firstValue) / Number(secondValue);
         displayResult(result);
+    }
+    else {
+        alert("ERROR: You can't divide a number by zero!");
+        document.querySelector('.displayText').textContent = 'error';
     }
 }
 
 function displayResult(result) {
     const displayText = document.querySelector('.displayText');
-    // display result with more 9+ digits using scientific notation (rounded to the ten thousandeth place)
+    // Display result with more 9+ digits using scientific notation (rounded to the ten thousandeth place)
     if (result.toString().length > 9) {
-        displayText.textContent = (result.toExponential(4));
+        displayText.textContent = result.toExponential(4);
     }
     else {
         displayText.textContent = result;
     }
 }
 
-// takes an operator and 2 numbers and calls one of the basic math operators on the numbers
+// Takes an operator and 2 numbers and calls one of the basic math operators on the numbers
 function operate(firstValue, secondValue, operator) {
-    if (operator === "+") {addNumbers(firstValue, secondValue);}
-    else if (operator === "-") {subtractNumbers(firstValue, secondValue);}
-    else if (operator === "x") {multiplyNumbers(firstValue, secondValue);}
-    else if (operator === "÷") {divideNumbers(firstValue, secondValue);}
+    switch (operator) {
+        case '+':
+            addNumbers(firstValue, secondValue);
+            break;
+        case '-':
+            subtractNumbers(firstValue, secondValue);
+            break;
+        case 'x':
+            multiplyNumbers(firstValue, secondValue);
+            break;
+        case '÷':
+            divideNumbers(firstValue, secondValue);
+            break;
+        }
     }
 
-// called when % button is clicked 
+// Called when % button is clicked 
 function divideBy100(number) {
     const displayText = document.querySelector('.displayText');
     displayText.textContent = Number(number/100);
 }
 
 
-
-
-// Onload initial values 
-let savedValue = "";
-let currentValue = "";
-let savedOperator = "";
-let currentOperator = "";
-let operatorCount = 0; 
-
+function selectNumbers(event) {
+    // Disable decimal button if display already contains a decimal
+    if ((event === '.') && (currentValue.includes('.'))) {
+        return;
+    }
+    else if (currentValue.length < 9) {
+        console.log(currentValue);
+        currentValue += event;
+        console.log(currentValue);
+        const displayText = document.querySelector('.displayText');
+        displayText.textContent = currentValue;
+    }
+    // Disable number buttons when max input reaches str.length of 9
+    else if (currentValue.length > 9) {
+        return;
+    }
+}
 // Select number & display
 const numberButtons = document.querySelectorAll('.calcButton.number');
 numberButtons.forEach(button => {
-    button.addEventListener('click', (event) => {
-        // disable decimal button if display already contains a decimal
-        if ((event.target.dataset.val === '.') && (currentValue.includes('.'))) {
-            return;
-        }
-        else if (currentValue.length < 9) {
-            currentValue += event.target.dataset.val;
-            const displayText = document.querySelector('.displayText');
-            displayText.textContent = currentValue;
-        }
-        // disable number buttons when max input reaches str.length of 9
-        else if (currentValue.length > 9) {
-            return;
+    button.addEventListener('click', (event) => selectNumbers(event.target.dataset.val));
+});
+
+// Add keyboard support
+window.addEventListener('keydown', (event) => {
+        switch(event.key) {
+            case '.':
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+                selectNumbers(event.key);
+                break;
+            case '/':1.
+                selectOperator('÷');
+                break;
+            case '*':
+                selectOperator('x');
+                break;
+            case '+':
+            case '-':
+                selectOperator(event.key);
+                break;
+            case 'Enter':
+            case '=':
+                selectEqual('=');
+                break;
         }
     });
-});
+
+function selectOperator(event) {
+    operatorCount += 1; // counts n of times operator is clicked
+
+    if (operatorCount < 2) {
+        currentOperator = event;      // get operator symbol 
+        savedValue = currentValue; // move currentValue to savedValue
+        currentValue = ""; // reset currentValue to empty string
+
+        const runningText = document.querySelector('.runningText');
+        runningText.textContent = `${savedValue}${currentOperator}`;
+    }
+    else if (operatorCount === 2) {
+        operate(savedValue, currentValue, currentOperator);
+
+        currentOperator = event;  
+
+        const displayText = document.querySelector('.displayText');  // get sum from ouputted display
+        savedValue = displayText.textContent;
+        currentValue = ""; // reset currentValue to empty string
+
+        const runningText = document.querySelector('.runningText');
+        runningText.textContent = `${savedValue}${currentOperator}`;
+
+        operatorCount -= 1; 
+    }
+}
 
 // Select operator: prints displayed value and selected operator
 const operatorButtons = document.querySelectorAll('.calcButton.operator');
 operatorButtons.forEach(button => {
-    button.addEventListener('click', (event) => {
-        operatorCount += 1; // counts n of times operator is clicked
-
-        if (operatorCount < 2) {
-            currentOperator = event.target.innerHTML;      // get operator symbol 
-            savedValue = currentValue; // move currentValue to savedValue
-            currentValue = ""; // reset currentValue to empty string
-    
-            const runningText = document.querySelector('.runningText');
-            runningText.textContent = `${savedValue}${currentOperator}`;
-        }
-        else if (operatorCount === 2) {
-            operate(savedValue, currentValue, currentOperator);
-
-            currentOperator = event.target.innerHTML;  
-
-            const displayText = document.querySelector('.displayText');  // get sum from ouputted display
-            savedValue = displayText.textContent;
-            currentValue = ""; // reset currentValue to empty string
-
-            const runningText = document.querySelector('.runningText');
-            runningText.textContent = `${savedValue}${currentOperator}`;
-
-            operatorCount -= 1; 
-        }
+    button.addEventListener('click', (event) => selectOperator(event.target.innerHTML));
     });
-})
 
 
-const equalButton = document.querySelector('.calcButton.equal');
-equalButton.addEventListener('click', (event) => {
+function selectEqual(event) {
     // if user only selects 1 number then presses equal just display "value="
     if (savedValue === "") {
         const runningText = document.querySelector('.runningText');
-        runningText.textContent = `${currentValue}${event.target.innerHTML}`;
+        runningText.textContent = `${currentValue}${event}`;
     }
     else if (currentValue === "") {
         const runningText = document.querySelector('.runningText');
-        runningText.textContent = `${savedValue}${event.target.innerHTML}`;
+        runningText.textContent = `${savedValue}${event}`;
     }
     // else performs the math operation and outputs result on the display
     else {
         savedOperator = currentOperator; // save the math operation
-        currentOperator = event.target.innerHTML;  // save equal as currentOperator 
+        currentOperator = event;  // save equal as currentOperator 
     
         const runningText = document.querySelector('.runningText');
         runningText.textContent = `${savedValue}${savedOperator}${currentValue}${currentOperator}`;
@@ -136,7 +181,11 @@ equalButton.addEventListener('click', (event) => {
         const displayText = document.querySelector('.displayText');  // get sum from ouputted display
         currentValue = displayText.textContent; // saves sum as currentValue
     }
+}
 
+const equalButton = document.querySelector('.calcButton.equal');
+equalButton.addEventListener('click', (event) => {
+    selectEqual(event.target.innerHTML);
 });
 
 // AC button: all clear - reset everything
@@ -191,11 +240,3 @@ clearButton.addEventListener('click', () => {
         document.querySelector('.displayText').textContent = 0;
     }
 })
-
-
-
-
-
-
-
-// add keyboard support : number, operator, and equal buttons
